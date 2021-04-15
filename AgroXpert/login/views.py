@@ -72,7 +72,7 @@ def signin(request):
             print(fetch)
             conn.commit()
             conn.close()
-            return render(request,'chatbot.html')
+            return render(request,'administrator.html')
         else:
             res = "Unable to Signin Password or Admin Id entered is incorrect"
 
@@ -96,5 +96,5 @@ def signup(request):
 
         conn.commit()
         conn.close()
-        return render(request, 'chatbot.html')
+        return render(request, 'administrator.html')
     return render(request,'admin.html')

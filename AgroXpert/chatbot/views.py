@@ -1,4 +1,5 @@
 from chatterbot import ChatBot
+from django.http import JsonResponse
 import sqlite3 as sql
 conn=sql.connect('db.sqlite3')
 from chatterbot.trainers import ListTrainer
@@ -47,10 +48,26 @@ from django.shortcuts import render
 from django.shortcuts import render
 
 # Create your views here.
+def Home(request):
+    if request.method=="POST" and request.POST['check']=="Admin":
+        return (AddQuestion(request))
+    else:
+        return Chatbot(request)
 def Chatbot(request):
+    print("req")
     Reply=""
     query=""
+    response={}
     if request.method=="POST":
+
         query=request.POST["Search"]
         Reply=chatbots.get_response(query)
-    return(render(request,'chatbot.html',{"Reply":Reply,"query":query}))
+        print(query,Reply)
+        data=str(Reply)
+        print(type(data))
+    return JsonResponse({'query':query,'Reply':data})
+def AddQuestion(request):
+    if request.method=='POST':
+        method=request.POST
+        set_pairs.append([method["question"],method["answer"]])
+    return(render(request,'administrator.html',{"qna":set_pairs}))

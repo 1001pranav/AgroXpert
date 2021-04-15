@@ -34,40 +34,50 @@
   <body>
     <nav class="navbar navbar-dark bg-dark">
      <h1 class="h1 navbar-brand">Welcome to Algoxpert Chatbot</h1>
-
+      <a href="/" class="btn btn-outline-danger" >Logout</a>
     </nav>
-      <center>  
-        <div class="row" >
-          <div class="col col-12" id="textarea">
 
-            <textarea  class="text" cols="100" readonly="">{{query}}</textarea>
-          </div>
-        </div>
-    </center>
-    <center>  
+      <div class="container" id="chat">
 
-        <div class="row">
-          <div class="col col-12" id="textarea">
-            <textarea class="text" cols="100" readonly="">{{Reply}}</textarea>
-          </div>
-        </div>
-    </center>
+      </div>
   
     <div class="container fixed-bottom">
 
-      <form class="form-group" action="/chatbot" method="post">
+      <form class="form-group" id="form" method="post">
         {%csrf_token%}
 
         <div class="row ">
           <div class="col col-9">
-            
+            <input type="hidden" name="check" value="chatbot" />
             <input type="text" placeholder="Any Queries regarding Agriculture or Farming?" name="Search" class="form-control " value="" style=" border: 2px solid #0058b0;">
             </div>
             <div class="col col-3">
-            <button type="submit" class="btn btn-outline-success " name="button">Ask Question?</button>
+            <button type="button" id="submit" class="btn btn-outline-success " name="button">Ask Question?</button>
           </div>
         </div>
       </form>
     </div>
+    {% block javascript %}
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+        $(document).ready(function(){
+
+          $('#submit').on('click',function(){
+            $.post({
+              data : $('#form').serialize(),
+              url : "/chatbot",
+              success: function(response){
+                
+                $('#chat').append(response.query)
+                $('#chat').append("<br/>")
+                $('#chat').append(response.Reply)
+                $('#chat').append("<br/>")
+              }
+            })
+          })
+        })
+      </script>
+    {% endblock javascript %}
+    
   </body>
 </html>
