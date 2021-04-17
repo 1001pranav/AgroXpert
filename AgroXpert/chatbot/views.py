@@ -1,7 +1,9 @@
-from chatterbot import ChatBot
 from django.http import JsonResponse
+import csv
 import sqlite3 as sql
+import csv
 conn=sql.connect('db.sqlite3')
+from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 set_pairs = [#vandana
             ['hello','Hi i am Agroxpert the Farmer\'s expert chatbot, How May i Help you?'],
@@ -27,9 +29,10 @@ set_pairs = [#vandana
 ['how is transplating of seed is done?','Manual transplanting is done either at random or in straight-rows'],
 ['what is random transplanting method?','seedlings are transplanted without a definite distance or space between plants'],
 ['what is straight-row transplanting?','The straight-row method follows a uniform spacing between plants'],
-[''],
 ]
 
+
+data=open("dataset.csv")
 #creating a new chatbot
 chatbots = ChatBot(name='AgroXpert', read_only=True,
                  logic_adapters=[
@@ -40,10 +43,10 @@ chatbots = ChatBot(name='AgroXpert', read_only=True,
 
                          }])
 trainer = ListTrainer(chatbots)
+#for item in csv.reader(data):
 for item in set_pairs:
     trainer.train(item)
-from django.shortcuts import render
-
+    print(item)
 # Create your views here.
 from django.shortcuts import render
 
@@ -67,6 +70,7 @@ def Chatbot(request):
         print(type(data))
     return JsonResponse({'query':query,'Reply':data})
 def AddQuestion(request):
+
     if request.method=='POST':
         method=request.POST
         set_pairs.append([method["question"],method["answer"]])

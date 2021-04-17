@@ -43,31 +43,36 @@
   
     <div class="container fixed-bottom">
 
-      <form class="form-group" id="form" method="post">
+      <form class="form-group" action="/chatbot" id="form" method="post">
         {%csrf_token%}
 
         <div class="row ">
           <div class="col col-9">
             <input type="hidden" name="check" value="chatbot" />
-            <input type="text" placeholder="Any Queries regarding Agriculture or Farming?" name="Search" class="form-control " value="" style=" border: 2px solid #0058b0;">
+            <input type="text" id="qns" placeholder="Any Queries regarding Agriculture or Farming?" name="Search" class="form-control " value="" style=" border: 2px solid #0058b0;">
             </div>
             <div class="col col-3">
-            <button type="button" id="submit" class="btn btn-outline-success " name="button">Ask Question?</button>
+            <button type="button" id="submit" class="btn btn-outline-success " >Ask Question?</button>
           </div>
         </div>
       </form>
     </div>
     {% block javascript %}
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-      <script type="text/javascript">
+     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
         $(document).ready(function(){
-
-          $('#submit').on('click',function(){
+        $('#form').on('keydown',function(e){
+               if (e.keyCode == '13') {
+                 e.preventDefault();
+               }
+        })
+          $('#submit').on('click',function(event){
+            event.preventDefault();
             $.post({
               data : $('#form').serialize(),
               url : "/chatbot",
               success: function(response){
-                
+
                 $('#chat').append(response.query)
                 $('#chat').append("<br/>")
                 $('#chat').append(response.Reply)
@@ -77,6 +82,8 @@
           })
         })
       </script>
+
+
     {% endblock javascript %}
     
   </body>
