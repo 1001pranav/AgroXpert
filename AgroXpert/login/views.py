@@ -2,8 +2,10 @@ from django.shortcuts import render
 import mysql.connector as sql
 
 # Create your views here.
+login_failed=False
 def farmerlogin(request):
     res = ""
+    login_failed=False
     if request.method=="POST":
         print()
         try:
@@ -22,13 +24,16 @@ def farmerlogin(request):
         fetchRes=cur.fetchall()
         print(fetchRes)
         if len(fetchRes) == 1:
+            login_failed = False
             return render(request, 'chatbot.html')
 
         else:
+            login_failed=True
             res = "Unable to Signin Password or farmer Id entered is incorrect"
+        print(res,login_failed)
         conn.commit()
         conn.close()
-    return render(request,'farmer.html',{"res": res})
+    return render(request,'farmer.html',{"res": res,"failed":login_failed})
 def admin(request):
     return render(request,'admin.html')
 def farmer(request):
@@ -59,6 +64,7 @@ def farmerRegister(request):
     return render(request,'farmer.html')
 def signin(request):
     res=""
+    login_failed = False
     conn = sql.connect(host="localhost",user="root",password="",database="agroxpert")
     cur = conn.cursor()
     if request.method=="POST":
@@ -72,11 +78,14 @@ def signin(request):
             print(fetch)
             conn.commit()
             conn.close()
+            login_failed = False
             return render(request,'administrator.html')
         else:
-            res = "Unable to Signin Password or Admin Id entered is incorrect"
+            login_failed = True
 
-    return render(request,'admin.html',{"res":res})
+            res = "Unable to Signin Password or Admin Id entered is incorrect"
+            print(res)
+    return render(request,'admin.html',{"res":res,"failed":login_failed})
 def signup(request):
     res = ""
     conn = sql.connect(host="localhost",user="root",password="",database="agroxpert")

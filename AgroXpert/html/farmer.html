@@ -113,9 +113,11 @@
 	
 	</ul>
 	</nav>
-    <script>
-        alert({{res}});
-    </script>
+    {% if failed %}
+        <div class="container alert alert-warning">
+            <strong>Error !! </strong>{{res}}
+        </div>
+    {% endif %}
   <div class="login-page">
   <div class="form">
 
