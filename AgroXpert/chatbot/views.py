@@ -63,7 +63,15 @@ def AddQuestion(request):
     if request.method=='POST':
         data_file = open(file_path, "a")
         method=request.POST
-        QnA_data=str(method["question"]+","+method["answer"]+"\n")
+        qns=method["question"]
+        ans=method["answer"]
+        if(',' in ans):
+            ans.replace(",","\",\"")
+            print(ans)
+        if(',' in qns):
+            qns.replace(',',"\",\"")
+
+        QnA_data=str(qns+","+ans+"\n")
         data_file.write(QnA_data)
         train()
     return(render(request,'administrator.html'))
