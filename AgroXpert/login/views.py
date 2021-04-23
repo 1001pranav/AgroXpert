@@ -1,8 +1,16 @@
 from django.shortcuts import render
 import mysql.connector as sql
-
+from django.http import HttpResponseRedirect
 # Create your views here.
 login_failed=False
+def farmerChatbot(request):
+    return render(request,'chatbot.html')
+def home(request):
+    return render(request,'home.html')
+def admin(request):
+    return render(request,'admin.html')
+def farmer(request):
+    return render(request,'farmer.html')
 def farmerlogin(request):
     res = ""
     login_failed=False
@@ -25,7 +33,7 @@ def farmerlogin(request):
         print(fetchRes)
         if len(fetchRes) == 1:
             login_failed = False
-            return render(request, 'chatbot.html')
+            return HttpResponseRedirect('farmer')
 
         else:
             login_failed=True
@@ -34,10 +42,7 @@ def farmerlogin(request):
         conn.commit()
         conn.close()
     return render(request,'farmer.html',{"res": res,"failed":login_failed})
-def admin(request):
-    return render(request,'admin.html')
-def farmer(request):
-    return render(request,'farmer.html')
+
 def farmerRegister(request):
     res = ""
     if request.method == "POST":
@@ -59,7 +64,7 @@ def farmerRegister(request):
 
         conn.commit()
         conn.close()
-        return render(request, 'chatbot.html')
+        return HttpResponseRedirect('farmer')
 
     return render(request,'farmer.html')
 def signin(request):
@@ -79,7 +84,7 @@ def signin(request):
             conn.commit()
             conn.close()
             login_failed = False
-            return render(request,'administrator.html')
+            return HttpResponseRedirect('administration/')
         else:
             login_failed = True
 

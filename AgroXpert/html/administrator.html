@@ -23,10 +23,18 @@
       <nav class="navbar navbar-dark bg-dark">
          <h1 class="h1 navbar-brand">AgroXpert Administrator Window</h1>
 
-         <ul class="nav  ">
+         <ul class="nav">
                <li class="nav nav-item">
-                  <button class="btn btn-info" onclick="ShowQuestion()">Add Question</button>
+                  <button class="btn btn-success" onclick="ShowQuestion()">Add QnA</button>
                </li>
+            <li class="nav nav-item">
+                  <form class="" action="showQuestion" method="post">
+                     {% csrf_token %}
+                     <input type="hidden" name="check" value="edit">
+                     <button type="submit" class="btn btn-warning mx-1">Edit/Delete QnA</button>
+                  </form>
+
+            </li>
             <li class="nav nav-item">
                <a href="/" class="btn btn-outline-danger" >Logout</a>
             </li>
@@ -40,8 +48,33 @@
             <input type="text" placeholder="Enter Question" class="form-control my-1" name="question">
             <textarea name="answer" class="form-control" placeholder="answer" rows="8" cols="80"></textarea>
             <button type="submit" class="btn btn-success my-1" name="button"> submit</button>
+
          </div>
 
       </form>
+   <table class="container my-2 table table-warning table-striped">
+      {% for rows in dataset %}
+         <form class="" method="post" action="editQuestion" >
+            <tr>
+               {%csrf_token%}
+               <td>
+                    <input type="text" value="{{ forloop.counter0 }}" name="id" size="5" readonly>
+               </td>
+               <td>
+                  <textarea name="qn" id="qn" rows="4" cols="60">{{rows.0}}</textarea>
+               </td>
+               <td>
+                  <textarea name="ans" id="ans" rows="5" cols="80">{{rows.1}}</textarea>
+               </td>
+               <td>
+                  <button type="submit" class="btn btn-dark" value="Edit" id="send" name="button">Edit</button>
+               </td>
+               <td>
+                  <button type="submit" class="btn btn-danger my-1" value="Delete" name="button"> Delete</button>
+               </td>
+            </tr>
+         </form>
+      {% endfor %}
+   </table>
    </body>
 </html>

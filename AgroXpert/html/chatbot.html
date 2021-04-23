@@ -11,13 +11,13 @@
         background-color: red;
         padding: 10px;
         border-radius: 10px;
+        width:fit-content(150px);
       }
       .botText
       {
         background-color: green;
         padding: 10px;
         border-radius: 10px;
-
       }
       body{
         background-color:honeydew;
@@ -61,7 +61,7 @@
 
     <div class="container fixed-bottom">
 
-      <form class="form-group" action="/chatbot" id="form" method="post">
+      <form class="form-group" action="farmer/chatbot" id="form" method="post">
         {%csrf_token%}
 
         <div class="row ">
@@ -84,7 +84,7 @@
                  e.preventDefault();
                  $.post({
               data : $('#form').serialize(),
-              url : "/chatbot",
+              url : "farmer/chatbot",
               success: function(response){
                  var query='<p class="userText"><span>' + response.query + '</span></p>'
                  var reply='<p class="botText"><span>' + response.Reply + '</span></p>'
@@ -98,7 +98,7 @@
             event.preventDefault();
             $.post({
               data : $('#form').serialize(),
-              url : "/chatbot",
+              url : "/farmer/chatbot",
               success: function(response){
                  var query='<p class="userText"><span>' + response.query + '</span></p>'
                  var reply='<p class="botText"><span>' + response.Reply + '</span></p>'
