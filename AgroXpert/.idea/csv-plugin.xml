@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\chatbot\dataset.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\chatbot\urls.py">
           <value>
             <Attribute>

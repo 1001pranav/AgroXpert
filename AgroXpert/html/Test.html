@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script>
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(stream => {
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.start();
+
+    const audioChunks = [];
+    mediaRecorder.addEventListener("dataavailable", event => {
+      audioChunks.push(event.data);
+    });
+
+    mediaRecorder.addEventListener("stop", () => {
+      const audioBlob = new Blob(audioChunks);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    });
+
+    setTimeout(() => {
+      mediaRecorder.stop();
+    }, 3000);
+  });
+</script>
+</head>
+
+<body style="background-color:rgb(101, 185, 17); ">
+<header>
+	<h1>Record and Play Audio in JavaScript</h1>
+</header>
+<!--button for 'start recording'-->
+<p>
+	<button id="btnStart">START RECORDING</button>
+			 
+	<button id="btnStop">STOP RECORDING</button>
+	<!--button for 'stop recording'-->
+</p>
+
+<!--for record-->
+<audio controls></audio>
+<!--'controls' use for add
+	play, pause, and volume-->
+
+<!--for play the audio-->
+<audio id="adioPlay" controls></audio>
+</body>
+
+</html>

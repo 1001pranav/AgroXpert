@@ -16,18 +16,24 @@
       <script type="text/javascript">
          function ShowQuestion(){
             var form=document.getElementById('form').style.display = "block"
+            document.getElementById('qns').style.display = "none"
+            document.getElementsByClassName('table')[0].style.display="none"
          }
       </script>
    </head>
    <body>
       <nav class="navbar navbar-dark bg-dark">
-         <h1 class="h1 navbar-brand">AgroXpert Administrator Window</h1>
+         <a href="/administration/" class="nav-link" ><h1 class="h1 navbar-brand">AgroXpert Administrator Window</h1></a>
 
          <ul class="nav">
-               <li class="nav nav-item">
-                  <button class="btn btn-success" onclick="ShowQuestion()">Add QnA</button>
+            <li class="nav-item">
+                  <a class="btn btn-info mx-1" href="checkMail" >Check Mail</a>
                </li>
-            <li class="nav nav-item">
+            <li class="nav-item">
+               <li class="nav-item">
+                  <a class="btn btn-success" onclick="ShowQuestion()">Add QnA</a>
+               </li>
+            <li class="nav-item">
                   <form class="" action="showQuestion" method="post">
                      {% csrf_token %}
                      <input type="hidden" name="check" value="edit">
@@ -40,19 +46,31 @@
             </li>
          </ul>
       </nav>
-      <form class="form-group" id="form" action="addQuestion" method="post">
+      <table class="container table table-dark table-striped" id="qns">
+      {% for rows in qna %}
+         <tr>
+            <td>
+               {{rows.0}}
+            </td>
+            <td>
+               {{rows.1}}
+            </td>
+         </tr>
+      {% endfor %}
+      </table>
+      <form class="form-group" id="form" action="addQuestions" method="post">
          {% csrf_token %}
          <div class="container">
-            {{qna}}
             <input type="hidden" name="check" value="Admin" />
             <input type="text" placeholder="Enter Question" class="form-control my-1" name="question">
             <textarea name="answer" class="form-control" placeholder="answer" rows="8" cols="80"></textarea>
+            <input type="url" placeholder="Enter URLs (if any ) (if more than 1 URLs then use , )" name="url" class="form-control" >
             <button type="submit" class="btn btn-success my-1" name="button"> submit</button>
 
          </div>
 
       </form>
-   <table class="container my-2 table table-warning table-striped">
+   <table class="container table table-warning table-striped" id="qns">
       {% for rows in dataset %}
          <form class="" method="post" action="editQuestion" >
             <tr>
@@ -76,5 +94,69 @@
          </form>
       {% endfor %}
    </table>
+   {% if mail %}
+
+      <table class="container table table-warning table-striped">
+         <tr>
+            <td>
+               Subject
+            </td>
+            <td>
+               Mail/Question
+            </td>
+            <td>
+               Reply
+            </td>
+         </tr>
+         {% for chat in response %}
+            <form class="form-group" action="Mail" method="post">
+               <tr>
+                  <td>{{chat.0}}</td>
+                  <td>{{chat.1}}</td>
+
+                     {% if chat.2 == "-a" %}
+                        <td>
+                           {%csrf_token%}
+                           <input type="hidden" name="cid" value="{{chat.3}}">
+                           <textarea class="form-control" name="reply"></textarea>
+                        </td>
+                        <td>
+                           <button type="submit" class="btn btn-success">Reply</button>
+                        </td>
+                     {% else %}
+                        <td>
+                           {{chat.2}}
+                        </td>
+                     {% endif %}
+                  </td>
+               </tr>
+            </form>
+         {% endfor %}
+      </table>
+   {% endif %}
+    {% block javascript %}
+     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+          $('#submit').on('click',function(event){
+            event.preventDefault();
+            if($('#qns').val() !==""){
+              console.log($('#qns').val())
+              $.post({
+                 data : $('#form').serialize(),
+                 url : "/farmer/Expertchat",
+                 success: function(response){
+                   alert("Message successfully sent")
+               }
+             })
+            }
+            else{
+              alert(" Please send before sending...")
+            }
+          })
+        })
+
+      </script>
+    {% endblock javascript %}
    </body>
 </html>
